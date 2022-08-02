@@ -2,30 +2,35 @@
 let player= document.querySelector('#player-hand');
 let dealer = document.querySelector('#dealer-hand');
 let button = document.querySelector('.buttons');
+let message = document.querySelector('.message-container');
+let playerScore = document.querySelector('.player-name')
+let bet = document.querySelector('.bet');
+
 //! ////////// Creating Hidden Card Image //////////
 let hiddenImage = document.createElement('img')
 hiddenImage.setAttribute('src', `images/NicePng_playing-card-back-png_1215756.png`)
-let bet = document.querySelector('.bet');
+
 //! ////////// Creating Deck and Player Arrays //////////
 let suits = ['spades', 'hearts', 'clubs', 'diamonds']
 let ranks = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'jack', 'queen', 'king', 'ace']
 let deck = []
 let playerHand = []
 let dealerHand = []
-//! ////////// Creating Deck Arrays //////////
+
+//! ////////// Setting Default Game Stats //////////
 let dealt = false
 let betAmount = 0
 let playerSum = 0
 let dealerSum = 0
+let playerMoney = 20
+playerScore.innerText = `Player: $ ${playerMoney}`
+
+//! ////////// Creating Deck and Shuffling //////////
 createDeck()
 let shuffledDeck = shuffleArray(deck);
 let hiddenCard = shuffledDeck.pop()
-let playerMoney = 20
-let message = document.querySelector('.message-container');
-let playerScore = document.querySelector('.player-name')
-playerScore.innerText = `Player: $ ${playerMoney}`
 
-//! //////////////// Shuffle ////////////////
+//! //////////////// Shuffle Funcction ////////////////
 function shuffleArray(array) {
     for (var i = array.length - 1; i > 0; i--) {
         var j = Math.floor(Math.random() * (i + 1));
@@ -35,10 +40,14 @@ function shuffleArray(array) {
     }
     return array;
 }
-//! //////////////// Create Deck ////////////////
+
+//! //////////////// Create Deck Function ////////////////
 function createDeck(){
+    //* Loops through suits
     for (let i = 0; i < suits.length; i++){
+        //* Loops through ranks 
         for (let j =0 ; j < ranks.length; j++){
+            //* Assigns value to cards 2-10
             if(j < 9){
                 deck.push({
                     'suit': `${suits[i]}`,
@@ -47,6 +56,7 @@ function createDeck(){
                     'points': j+2
                 })
             }
+            //* Assigns value of 11 to Ace
             else if (j === 12){
                 deck.push({
                     'suit': `${suits[i]}`,
@@ -55,6 +65,7 @@ function createDeck(){
                     'points': 11
                 })
             }
+            //* Assigns value of 10 to remaining face cards
             else {
                 deck.push({
                     'suit': `${suits[i]}`,
@@ -67,19 +78,15 @@ function createDeck(){
         console.log(deck);
     }
 }
-function dealCard(p){
-    let pCard = shuffledDeck.pop()
-    pHand.push(pCard)
-    let newimage1 = document.createElement('img')
-    newimage1.setAttribute('src', `${pCard['img']}`)
-    player.append(newimage1)
-}
-//! //////////////// Deal ////////////////
+
+//! //////////////// Deal Function ////////////////
 function deal(){
+    //* Adds hidden card value to dealer hand
     dealerHand.push(hiddenCard)
+    dealer.append(hiddenImage)
+    //* grabs last card off shuffled deck and ads it to dealer hand and prints the image
     let dealerCard = shuffledDeck.pop()
     dealerHand.push(dealerCard)
-    dealer.append(hiddenImage)
     let newimage2 = document.createElement('img')
     newimage2.setAttribute('src', `${dealerCard.img}`)
     dealer.append(newimage2)
@@ -91,6 +98,7 @@ function deal(){
         player.append(newimage1)
     }
 }
+
 //! //////////////// Hit ////////////////
 function hit(){
     let playerCard = shuffledDeck.pop()
@@ -100,6 +108,7 @@ function hit(){
     player.append(newimage1)
     
 }
+
 //! //////////////// Get Card Values ////////////////
 function getCardValues(player){
     let sum = 0
@@ -110,6 +119,7 @@ function getCardValues(player){
     console.log(sum);
     return sum
 }
+
 //! //////////////// Check for Ace ////////////////
 function playerAce(){
     for (let i = 0; i < playerHand.length; i ++){
@@ -122,10 +132,10 @@ function dealerAce(){
     for (let i = 0; i < dealerHand.length; i ++){
         if (dealerHand[i].rank === 'ace' && dealerSum > 21){
             dealerHand[i].points = 1
-            return true
         }
     }
 }
+
 //! //////////////// Message ////////////////
 function youWin(){
     let message = document.querySelector('.message-container');
@@ -148,6 +158,7 @@ function over21(){
         youLose()
     }
 }
+
 //! //////////////// Buttons ////////////////
 button.addEventListener('click', (e)=>{
     if (e.target.innerText === 'Deal'){
