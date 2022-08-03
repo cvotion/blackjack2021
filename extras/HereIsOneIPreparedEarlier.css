@@ -53,13 +53,15 @@ body * {
 
 .hand img {
   height: 100%;
-  width: auto;
   padding: 10px 0 10px 10px;
 }
 
 .buttons {
   display: flex;
   justify-content: center;
+}
+.bet-container{
+  display: flex;
 }
 
 @media screen and (max-width: 450px) {
@@ -73,7 +75,20 @@ body * {
     display: flex;
     justify-content: space-around;
   }
+
+  .hand {
+    height: 90px;
+    background: rgba(10, 43, 2, 0.5);
+    border-radius: 5px;
+  }
+
+  .hand img {
+    height: 85px;
+    width: 55px;
+    padding: 10px 0 10px 10px;
+  }
 }
+
 
 button {
   margin: 10px;
