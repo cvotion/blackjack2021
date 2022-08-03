@@ -62,6 +62,18 @@ body * {
   justify-content: center;
 }
 
+@media screen and (max-width: 450px) {
+  .buttons {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .bet-container{
+    display: flex;
+  }
+}
+
 button {
   margin: 10px;
   font-size: 18px;
