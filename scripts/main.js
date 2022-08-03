@@ -4,7 +4,7 @@ let dealer = document.querySelector('#dealer-hand');
 let button = document.querySelector('.buttons');
 let message = document.querySelector('.message-container');
 let playerScore = document.querySelector('.player-name')
-let bet = document.querySelector('.bet');
+let bet = document.querySelector('.bet');   
 
 //! ////////// Creating Hidden Card Image //////////
 let hiddenImage = document.createElement('img')
@@ -90,6 +90,7 @@ function deal(){
     let newimage2 = document.createElement('img')
     newimage2.setAttribute('src', `${dealerCard.img}`)
     dealer.append(newimage2)
+    //* since player receives two cards face up, this loop will iterrate twice and deal the player a new card
     for (let i = 0; i <2; i ++){
         let playerCard = shuffledDeck.pop()
         playerHand.push(playerCard)
@@ -101,6 +102,7 @@ function deal(){
 
 //! //////////////// Hit ////////////////
 function hit(){
+    //* deals the player a new card and appends the image
     let playerCard = shuffledDeck.pop()
     playerHand.push(playerCard)
     let newimage1 = document.createElement('img')
@@ -111,6 +113,7 @@ function hit(){
 
 //! //////////////// Get Card Values ////////////////
 function getCardValues(player){
+    //* loops through player/dealer hand and returns the total value of all cards
     let sum = 0
     for (i = 0; i < player.length; i ++){
         let value = player[i].points
@@ -122,6 +125,7 @@ function getCardValues(player){
 
 //! //////////////// Check for Ace ////////////////
 function playerAce(){
+    //* loops through player hand to check for aces then changes ace value to 1 if player score is over 21
     for (let i = 0; i < playerHand.length; i ++){
         if (playerHand[i].rank === 'ace' && playerSum > 21){
             playerHand[i].points = 1
@@ -138,21 +142,27 @@ function dealerAce(){
 
 //! //////////////// Message ////////////////
 function youWin(){
+    //* creates div and places winning message inside
     let message = document.querySelector('.message-container');
     let newMessage = document.createElement('div')
     newMessage.setAttribute('class', 'message green')
     newMessage.innerText = 'You Win!'
     message.append(newMessage)
+    //* increases player's money by 1.5 times the bet amount
     playerMoney += betAmount * 1.5
 }
 function youLose(){
+    //* creates dive and places losing message inside
     let message = document.querySelector('.message-container');
     let newMessage = document.createElement('div')
     newMessage.setAttribute('class', 'message red')
     newMessage.innerText = 'You Lose!'
     message.append(newMessage)
+    //* deducts bet amount from player's money
     playerMoney -= betAmount
 }
+
+//! ////////// Checks if player hand is over 21 ///////////
 function over21(){
     if (playerSum > 21){
         youLose()
@@ -161,30 +171,40 @@ function over21(){
 
 //! //////////////// Buttons ////////////////
 button.addEventListener('click', (e)=>{
+    //* listens for Deal button click
     if (e.target.innerText === 'Deal'){
+        //* If button has not been clicked then game will deal cards and set "dealt" to true
         if (dealt === false){
             deal()
             dealt = true
+            //* game checks player and dealer values
             dealerSum = getCardValues(dealerHand)
             playerSum = getCardValues(playerHand)
             over21()
         }
     }
+    //* Listens for Hit button click
     else if (e.target.innerText === 'Hit'){
+        //* If deal button has been clicked already then it will deal player a new card
         if (dealt === true){    
             hit()
             playerSum = getCardValues(playerHand)
+            //* after checking the player's card values the game will check for aces then check the values again 
             playerAce()
             playerSum = getCardValues(playerHand)
             over21()
         }
     }
+    //* Listens for Stand button click
     else if (e.target.innerText === 'Stand'){
-        console.log('click');
+        //* If deal button has already been clicked then the game will do the following,
         if (dealt === true){
+            //* Change image of hidden card form the back of card to the true card image
             hiddenImage.setAttribute('src', `${hiddenCard['img']}`)
+            //* checks player and dealer hand sum
             dealerSum = getCardValues(dealerHand)
             playerSum = getCardValues(playerHand)
+            //* deals dealer a new card if the sum is under 17
             if (dealerSum < 17){
                 let dealerCard = shuffledDeck.pop()
                 dealerHand.push(dealerCard)
@@ -192,9 +212,11 @@ button.addEventListener('click', (e)=>{
                 newimage2.setAttribute('src', `${dealerCard['img']}`)
                 dealer.append(newimage2)
             }
+            //* gets dealer hand value, checks for aces, then gets value again
             dealerSum = getCardValues(dealerHand)
             dealerAce()
             dealerSum = getCardValues(dealerHand)
+    //! ///////// End of game calculations //////////        
             if (playerSum === 21){
                 youWin()
             }
@@ -219,16 +241,20 @@ button.addEventListener('click', (e)=>{
             }
         }
     }    
+    //! ////////// Betting Buttons //////////
     else if (e.target.innerText === '+'){
+        //* Increases bet amount
         console.log('clicked');
         betAmount += 1
         bet.innerText = `$ ${betAmount}`
     }
     else if (e.target.innerText === '-' && betAmount > 1){
+        //* Decreases bet amount
         console.log('clicked');
         betAmount -= 1
         bet.innerText = `$ ${betAmount}`
     }
+    //! ////////// Reset Button //////////
     else if (e.target.innerText === 'Reset'){
         console.log('reset');
         hiddenImage.setAttribute('src', `images/NicePng_playing-card-back-png_1215756.png`)
